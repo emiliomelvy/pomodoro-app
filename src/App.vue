@@ -4,6 +4,7 @@
   import recycleBin from './assets/recyclebin.svg'
   import pause from './assets/pause.svg'
   import reset from './assets/reset.svg'
+  import stop from './assets/stop.svg'
 
   export default {
     data() {
@@ -13,11 +14,17 @@
         recycleBin,
         pause,
         reset,
+        stop,
         timer: null,
         totalTime: (5*60),
         resetButton: false,
         userTime: 25,
         started: false,
+        arr: [],
+        date: '',
+        days: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+        months: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+        showModal: true
       }
     },
     methods: {
@@ -35,6 +42,7 @@
           this.totalTime--
         }, 1)
         this.started = true
+        this.date = new Date()
       },
       pauseTimer: function() {
         clearInterval(this.timer)
@@ -42,12 +50,23 @@
         this.resetButton = true
       },
       resetTimer: function() {
+        this.arr = [...this.arr, {
+          hours: this.date.getHours(),
+          mins: this.date.getMinutes(),
+          second: this.date.getSeconds(),
+          month: this.date.getMonth(),
+          date: this.date.getDate(),
+          day: this.date.getDay(),
+          minutes: Math.floor(this.totalTime / 60) < 10 ? `0${Math.floor(this.totalTime / 60)}` : Math.floor(this.totalTime / 60), 
+          sec: this.totalTime % 60 < 10 ? `0${this.totalTime % 60}` : this.totalTime % 60
+        },
+        ]
         clearInterval(this.timer)
         this.timer = null
         this.totalTime = (25*60)
         this.resetButton = false
         this.started = false
-      }
+      },
     },
     computed: {
       minutes: function(){
@@ -106,7 +125,7 @@
             <img :src="pause" alt="" class="w-8">
           </div>
           <div @click="resetTimer" v-if="resetButton" class="text-5xl w-44 h-16 bg-slate-400 text-center rounded-full flex justify-center items-center cursor-pointer bg-lime-200">
-            <img :src="reset" alt="" class="w-8">
+            <img :src="stop" alt="" class="w-8">
           </div>
         </div>
       </div>
@@ -132,17 +151,11 @@
             <th class="border">Duration</th>
             <th class="border">Notes</th>
           </tr>
-          <tr class="border">
+          <tr class="border" v-for="(tes, key) in this.arr" :key="key">
             <td class="border">1</td>
-            <td class="border">16:27:45, Sep 1, Thu</td>
-            <td class="border"><strong>0:07</strong> / 25 min.</td>
+            <td class="border">{{ tes.hours }}:{{ tes.mins }}:{{ tes.second }}, {{ this.months[tes.month] }} {{ tes.date }}, {{ this.days[tes.day] }}</td>
+            <td class="border"><strong>{{ tes.minutes }} : {{ tes.sec }}</strong> / 25 min.</td>
             <td class="border">  </td>
-          </tr>
-          <tr class="border">
-            <td class="border">2</td>
-            <td class="border">16:28:48, Sep 1, Thu</td>
-            <td class="border"><strong>00:16</strong> / 25 min.</td>
-            <td class="border">makan nasi ayam</td>
           </tr>
         </table>
       </div>
