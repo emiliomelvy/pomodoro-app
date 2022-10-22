@@ -99,7 +99,7 @@
           <div @click="add" v-if="!started" class="text-5xl w-16 h-16 bg-slate-400 text-center rounded-full cursor-pointer">
             +
           </div>
-          <div @click="startTimer" v-if="timer === null" class="text-5xl w-44 h-16 bg-slate-400 text-center rounded-full flex justify-center items-center cursor-pointer bg-lime-200">
+          <div @click="startTimer" v-if="timer === null" class="text-5xl w-44 h-16 bg-slate-400 text-center rounded-full flex justify-center items-center cursor-pointer bg-lime-200" :class="this.minutes === '00' ? 'hidden' : ''">
             <img :src="play" alt="" class="w-8">
           </div>
           <div @click="pauseTimer" v-if="timer" class="text-5xl w-44 h-16 bg-slate-400 text-center rounded-full flex justify-center items-center cursor-pointer bg-lime-200">
@@ -149,34 +149,3 @@
     </div>
   </div>
 </template>
-
-<!-- <template>
-  <div class="container">
-  <div id="app">
-    <div class="timer">
-      <span class="minute">{{ minutes }}</span>
-      <span>:</span>
-      <span class="seconds">{{ seconds }}</span>
-    </div>
-    <div class="controls">
-      <div class="start" v-if="!timer" @click="startTimer">
-        <i data-feather="play" ></i>
-      </div>
-      <div class="pause"  v-if="timer" @click="stopTimer">
-        <i data-feather="square"></i>
-      </div>
-      <div class="stop" v-if="resetButton" @click="resetTimer">
-        <i data-feather="rotate-cw"></i>
-      </div>
-      <div class="edit" v-if="!timer" @click="editTimer">
-        <i data-feather="edit-2"></i>
-      </div>
-    </div>
-    <div class="input">
-      <transition name="fade">
-        <input type="text" v-if="edit" v-model="userTime">
-      </transition>
-    </div>
-  </div>
-</div>
-</template> -->
