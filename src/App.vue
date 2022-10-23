@@ -16,7 +16,7 @@
         reset,
         stop,
         timer: null,
-        totalTime: (5*60),
+        totalTime: (25*60),
         changeTime: true,
         copyMinutes: null,
         copySec: 60,
@@ -34,9 +34,15 @@
     methods: {
       add: function() {
         this.totalTime += 60
+        console.log(window.localStorage.obj)
       },
       min: function() {
-        this.totalTime -= 60
+        if(this.totalTime === 60) {
+          return this.totalTime = 60 
+        }
+        else {
+          this.totalTime -= 60
+        }
       },
       padTime: function(time) {
         return (time < 10 ? '0' : '') + time
@@ -66,7 +72,7 @@
           date: this.date.getDate(),
           day: this.date.getDay(),
           minutes1: (+this.copyMinutes - +this.minutes) <= 10 ? `0${(+this.copyMinutes - +this.minutes) - 1}` : `${(+this.copyMinutes - +this.minutes)}`,
-          sec: +this.copySec - +this.seconds === 60 ? '00' : `${+this.copySec - +this.seconds}`,
+          sec: +this.copySec - +this.seconds === 60 ? '00' : `${+this.copySec - +this.seconds < 10 ? '0' : ''}${+this.copySec - +this.seconds}`,
           note: this.activity,
           copyMinutes: this.copyMinutes
         },
@@ -79,9 +85,20 @@
         this.activity = ''
         this.showModal = true
         this.changeTime = true
+        localStorage.setItem('obj', JSON.stringify(this.arr))
       },
       deleteSess: function() {
         this.arr = []
+        localStorage.clear('obj')
+      },
+      downloadObjectAsJson: function(){
+        const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(window.localStorage.obj));
+        const downloadAnchorNode = document.createElement('a');
+        downloadAnchorNode.setAttribute("href", dataStr);
+        downloadAnchorNode.setAttribute("download", 'logs' + ".json");
+        document.body.appendChild(downloadAnchorNode); // required for firefox
+        downloadAnchorNode.click();
+        downloadAnchorNode.remove();
       }
     },
     computed: {
@@ -105,8 +122,8 @@
       }
     },
     updated() {
-     if(this.minutes == 0) {
-      return this.resetTimer()
+    if(this.minutes == 0) {
+      this.resetTimer()
      } 
     }
   }
@@ -138,9 +155,9 @@
       </div>
     </div>
   </div> -->
-  <div v-if="showModal" class="container max-w-7xl mx-auto absolute overflow-hidden bg-black opacity-50 w-full h-[9999px]">
+  <div v-if="showModal" class="container md:max-w-7xl 2xl:max-w-[999rem] mx-auto absolute overflow-hidden bg-black opacity-50 w-full h-[100rem]">
   </div>
-  <div v-if="showModal" class="container max-w-7xl mx-auto absolute bg-sky-500 top-40 right-1/2 w-96 z-20 py-10">
+  <div v-if="showModal" class="container md:max-w-7xl mx-auto absolute bg-sky-500 top-40 md:inset-x-96 inset-x-1 w-96 z-20 py-10">
     <h1 class="text-3xl text-center">
       Please add notes
     </h1>
@@ -155,9 +172,9 @@
         You're doing {{this.activity}}
       </p>
     </div>
-    <div class="container max-w-7xl mx-auto flex justify-around overflow-hidden">
-      <div class="pt-10">
-        <div class="w-80 h-80 bg-slate-100 shadow-2xl rounded-full flex justify-center items-center">
+    <div class="container md:max-w-7xl px-5 md:mx-auto flex md:flex-row flex-col justify-around">
+      <div class="py-10">
+        <div class="w-80 h-80 bg-slate-100 shadow-2xl rounded-full flex justify-center mx-auto items-center">
           <div class="w-64 h-64 bg-red-400 rounded-full flex justify-center items-center">
             <div class="w-52 h-52 bg-red-400 rounded-full flex justify-center border-[2px]">
               <h1 class="text-5xl text-center text-white my-auto">
@@ -192,7 +209,7 @@
       </div>
       <div class="pt-20">
         <div class="flex justify-end gap-3 py-5">
-          <div class="flex basis-4/12 justify-center gap-2 bg-lime-200 rounded-full cursor-pointer">
+          <div @click="downloadObjectAsJson()" class="flex basis-4/12 justify-center gap-2 bg-lime-200 rounded-full cursor-pointer">
             <img :src="download" alt="" class="w-4 py-2 my-auto">
             <p class="text-xs py-2 my-auto">
               Download logs
@@ -214,7 +231,7 @@
           </tr>
           <tr class="border" v-for="(tes, key) in this.arr" :key="key">
             <td class="border pl-2 pr-10 py-5">{{ key + 1 }}</td>
-            <td class="border pl-2 pr-10 py-5">{{ tes.hours }}:{{ tes.mins }}:{{ tes.second }}, {{ this.months[tes.month] }} {{ tes.date }}, {{ this.days[tes.day] }}</td>
+            <td class="border pl-2 pr-10 py-5">{{ tes.hours }}:{{ tes.mins < 10 ? `0${tes.mins}` : tes.mins }}:{{ tes.second }}, {{ this.months[tes.month] }} {{ tes.date }}, {{ this.days[tes.day] }}</td>
             <td class="border pl-2 pr-10 py-5"><strong>{{ tes.minutes1 }} : {{ tes.sec }}</strong> / {{ tes.copyMinutes }} min.</td>
             <td class="border pl-2 pr-10 py-5">{{ tes.note }}</td>
           </tr>
