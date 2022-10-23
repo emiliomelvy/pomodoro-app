@@ -17,7 +17,9 @@
         stop,
         timer: null,
         totalTime: (5*60),
-        copyTime: null,
+        changeTime: true,
+        copyMinutes: null,
+        copySec: 60,
         resetButton: false,
         userTime: 25,
         started: false,
@@ -26,7 +28,7 @@
         days: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
         months: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
         showModal: true,
-        testing: '',
+        activity: '',
       }
     },
     methods: {
@@ -45,13 +47,17 @@
         }, 1)
         this.started = true
         this.date = new Date()
+        if(this.changeTime === true) {
+          this.copyMinutes = this.minutes
+        }
+        this.changeTime = false
       },
       pauseTimer: function() {
         clearInterval(this.timer)
         this.timer = null
         this.resetButton = true
-        console.log('copy : ', this.copyTime)
-        console.log(Math.floor(this.copyTime / 60) - this.minutes)
+        console.log('copyMinutes : ', this.copyMinutes)
+        console.log('this.minutes : ', this.minutes)
       },
       resetTimer: function() {
         this.arr = [...this.arr, {
@@ -61,11 +67,12 @@
           month: this.date.getMonth(),
           date: this.date.getDate(),
           day: this.date.getDay(),
-          minutes1: Math.floor(this.totalTime / 60) < 10 ? `0${Math.floor(this.totalTime / 60)}` : Math.floor(this.totalTime / 60), 
-          // minutes1: Math.floor((this.totalTime - +this.minutes) / 60),
-          sec: this.totalTime % 60 < 10 ? `0${this.totalTime % 60}` : this.totalTime % 60,
-          // sec: this.totalTime - +this.seconds,
-          note: this.testing
+          // minutes1: Math.floor(this.totalTime / 60) < 10 ? `0${Math.floor(this.totalTime / 60)}` : Math.floor(this.totalTime / 60), 
+          minutes1: (+this.copyMinutes - +this.minutes) <= 1 ? `0${(+this.copyMinutes - +this.minutes) - 1}` : `0${(+this.copyMinutes - +this.minutes)}`,
+          // sec: this.totalTime % 60 < 10 ? `0${this.totalTime % 60}` : this.totalTime % 60,
+          sec: +this.copySec - +this.seconds === 60 ? '00' : `${+this.copySec - +this.seconds}`,
+          note: this.activity,
+          copyMinutes: this.copyMinutes
         },
         ]
         clearInterval(this.timer)
@@ -73,16 +80,12 @@
         this.totalTime = (25*60)
         this.resetButton = false
         this.started = false
-        this.testing = ''
+        this.activity = ''
         this.showModal = true
+        this.changeTime = true
       },
-      enterinput: function(val) {
-        // this.testing += 
-        console.log(val)
-      },
-      get: function(val) {
-        console.log(val
-        )
+      deleteSess: function() {
+        this.arr = []
       }
     },
     computed: {
@@ -104,9 +107,6 @@
         }
         return this.padTime(seconds);
       }
-    },
-    mounted() {
-      this.copyTime = this.totalTime
     }
   }
 
@@ -137,21 +137,28 @@
       </div>
     </div>
   </div> -->
-  <div v-if="showModal" class="absolute shadow-[0 0 0 1000rem rgba(0, 0, 0, 0.5)] w-full h-[100vh]">
-    <div class="relative bg-sky-500 top-40 w-96 mx-auto z-20">
-      <h1 class="text-3xl text-center">
-        Please add notes
-      </h1>
-      <input type="text border-8" placeholder="notes" v-model="this.testing" @keydown.enter="showModal = false">
-      <button @click="showmodal = false" class="bg-red-500">enter</button>
+  <div v-if="showModal" class="container max-w-7xl mx-auto absolute overflow-hidden bg-black opacity-50 w-full h-[9999px]">
+  </div>
+  <div v-if="showModal" class="container max-w-7xl mx-auto absolute bg-sky-500 top-40 right-1/2 w-96 z-20 py-10">
+    <h1 class="text-3xl text-center">
+      Please add notes
+    </h1>
+    <div class="flex justify-center py-5">
+      <input type="text border-8" placeholder="notes" v-model="this.activity" @keydown.enter="showModal = false">
     </div>
   </div>
-  <div class="container max-w-7xl">
-    <div class="flex justify-around">
+  <div class="">
+
+    <div v-if="!showModal" class="container mx-auto max-w-7xl">
+      <p>
+        You're doing {{this.activity}}
+      </p>
+    </div>
+    <div class="container max-w-7xl mx-auto flex justify-around overflow-hidden">
       <div class="pt-10">
-        <div class="w-96 h-96 bg-slate-100 shadow-2xl rounded-full flex justify-center items-center">
-          <div class="w-80 h-80 bg-red-400 rounded-full flex justify-center items-center">
-            <div class="w-64 h-64 bg-red-400 rounded-full flex justify-center border-[2px]">
+        <div class="w-80 h-80 bg-slate-100 shadow-2xl rounded-full flex justify-center items-center">
+          <div class="w-64 h-64 bg-red-400 rounded-full flex justify-center items-center">
+            <div class="w-52 h-52 bg-red-400 rounded-full flex justify-center border-[2px]">
               <h1 class="text-5xl text-center text-white my-auto">
                 <span>
                   {{ minutes }}
@@ -164,7 +171,7 @@
             </div>
           </div>
         </div>
-        <div class="flex justify-between pt-16">
+        <div class="flex justify-between pt-16 gap-5">
           <div @click="min" v-if="!started" class="text-5xl w-16 h-16 bg-slate-400 text-center rounded-full cursor-pointer">
             -
           </div>
@@ -183,14 +190,14 @@
         </div>
       </div>
       <div class="pt-20">
-        <div class="flex justify-end gap-3">
+        <div class="flex justify-end gap-3 py-5">
           <div class="flex basis-4/12 justify-center gap-2 bg-lime-200 rounded-full cursor-pointer">
             <img :src="download" alt="" class="w-4 py-2 my-auto">
             <p class="text-xs py-2 my-auto">
               Download logs
             </p>
           </div>
-          <div class="flex cursor-pointer">
+          <div class="flex cursor-pointer" @click="deleteSess">
             <img :src="recycleBin" alt="" class="w-4 py-2 my-auto">
             <p class="text-xs py-2 my-auto">
               Delete all sessions
@@ -199,16 +206,16 @@
         </div>
         <table class="table-auto">
           <tr class="border rounded-full">
-            <th class="border">#</th>
-            <th class="border">Started at</th>
-            <th class="border">Duration</th>
-            <th class="border">Notes</th>
+            <th class="border px-5 py-3">#</th>
+            <th class="border pl-2 pr-10 py-3">Started at</th>
+            <th class="border pl-2 pr-10 py-3">Duration</th>
+            <th class="border pl-2 pr-10 py-3">Notes</th>
           </tr>
           <tr class="border" v-for="(tes, key) in this.arr" :key="key">
-            <td class="border">{{ key + 1 }}</td>
-            <td class="border">{{ tes.hours }}:{{ tes.mins }}:{{ tes.second }}, {{ this.months[tes.month] }} {{ tes.date }}, {{ this.days[tes.day] }}</td>
-            <td class="border"><strong>{{ tes.minutes1 }} : {{ tes.sec }}</strong> / 25 min.</td>
-            <td class="border">{{ tes.note }}</td>
+            <td class="border pl-2 pr-10 py-5">{{ key + 1 }}</td>
+            <td class="border pl-2 pr-10 py-5">{{ tes.hours }}:{{ tes.mins }}:{{ tes.second }}, {{ this.months[tes.month] }} {{ tes.date }}, {{ this.days[tes.day] }}</td>
+            <td class="border pl-2 pr-10 py-5"><strong>{{ tes.minutes1 }} : {{ tes.sec }}</strong> / {{ tes.copyMinutes }} min.</td>
+            <td class="border pl-2 pr-10 py-5">{{ tes.note }}</td>
           </tr>
         </table>
       </div>
