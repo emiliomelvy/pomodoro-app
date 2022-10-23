@@ -130,30 +130,6 @@
 </script>
 
 <template>
-  <!-- <div class="relative top-20 mx-auto p-5 border w-96 shadow-lg rounded-md bg-white">
-    <div class="mt-3 text-center">
-      <div class="mx-auto flex items-center justify-center h-12 w-12 rounded-full bg-red-100">
-        <svg class="h-6 w-6 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"
-        xmlnx="http://www.w.org/2000/svg">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
-          d="M5 13l4 4L19 7">
-          </path>
-        </svg>
-      </div>
-      <h3 class="text-lg leading-6 font-medium text-gray-900">Successfull</h3>
-      <div class="mt-2 px-7 py-3">
-        <p class="text-sm text-gray-500">Account has been Successfull registered.</p>
-      </div>
-      <div class="items-center px-4 py-3">
-        <button id="ok-btn"
-          class="px-4 py-2 bg-red-500 text-white 
-          text-base font-medium rounded-md w-full 
-          shadow-sm hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-purple-300">
-          OK
-        </button>
-      </div>
-    </div>
-  </div> -->
   <div v-if="showModal" class="container md:max-w-7xl 2xl:max-w-[999rem] mx-auto absolute overflow-hidden bg-black opacity-50 w-full h-[100rem]">
   </div>
   <div v-if="showModal" class="container md:max-w-7xl mx-auto absolute bg-sky-500 top-40 md:inset-x-96 inset-x-1 w-96 z-20 py-10">
@@ -167,7 +143,7 @@
   <div class="">
 
     <div v-if="!showModal" class="container mx-auto max-w-7xl">
-      <p>
+      <p class="text-3xl p-3">
         You're doing {{this.activity}}
       </p>
     </div>
