@@ -56,8 +56,6 @@
         clearInterval(this.timer)
         this.timer = null
         this.resetButton = true
-        console.log('copyMinutes : ', this.copyMinutes)
-        console.log('this.minutes : ', this.minutes)
       },
       resetTimer: function() {
         this.arr = [...this.arr, {
@@ -67,9 +65,7 @@
           month: this.date.getMonth(),
           date: this.date.getDate(),
           day: this.date.getDay(),
-          // minutes1: Math.floor(this.totalTime / 60) < 10 ? `0${Math.floor(this.totalTime / 60)}` : Math.floor(this.totalTime / 60), 
-          minutes1: (+this.copyMinutes - +this.minutes) <= 1 ? `0${(+this.copyMinutes - +this.minutes) - 1}` : `0${(+this.copyMinutes - +this.minutes)}`,
-          // sec: this.totalTime % 60 < 10 ? `0${this.totalTime % 60}` : this.totalTime % 60,
+          minutes1: (+this.copyMinutes - +this.minutes) <= 10 ? `0${(+this.copyMinutes - +this.minutes) - 1}` : `${(+this.copyMinutes - +this.minutes)}`,
           sec: +this.copySec - +this.seconds === 60 ? '00' : `${+this.copySec - +this.seconds}`,
           note: this.activity,
           copyMinutes: this.copyMinutes
@@ -107,6 +103,11 @@
         }
         return this.padTime(seconds);
       }
+    },
+    updated() {
+     if(this.minutes == 0) {
+      return this.resetTimer()
+     } 
     }
   }
 
