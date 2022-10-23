@@ -34,7 +34,6 @@
     methods: {
       add: function() {
         this.totalTime += 60
-        console.log(window.localStorage.obj)
       },
       min: function() {
         if(this.totalTime === 60) {
@@ -50,7 +49,7 @@
       startTimer: function() {
         this.timer = setInterval(() => {
           this.totalTime--
-        }, 1)
+        }, 1000)
         this.started = true
         this.date = new Date()
         if(this.changeTime === true) {
