@@ -71,7 +71,7 @@
           month: this.date.getMonth(),
           date: this.date.getDate(),
           day: this.date.getDay(),
-          minutes1: (+this.copyMinutes - +this.minutes) <= 10 ? `0${(+this.copyMinutes - +this.minutes) - 1}` : `${(+this.copyMinutes - +this.minutes)}`,
+          minutes1: (+this.copyMinutes - +this.minutes) <= 10 && (+this.copyMinutes - +this.minutes) ? `0${(+this.copyMinutes - +this.minutes) - 1}` : `${(+this.copyMinutes - +this.minutes)}`,
           sec: +this.copySec - +this.seconds === 60 ? '00' : `${+this.copySec - +this.seconds < 10 ? '0' : ''}${+this.copySec - +this.seconds}`,
           note: this.activity,
           copyMinutes: this.copyMinutes
