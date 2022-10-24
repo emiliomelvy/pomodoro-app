@@ -132,7 +132,7 @@
 <template>
   <div v-if="showModal" class="container md:max-w-7xl 2xl:max-w-[999rem] mx-auto absolute overflow-hidden bg-black opacity-50 w-full h-[100rem]">
   </div>
-  <div v-if="showModal" class="container md:max-w-7xl mx-auto absolute bg-sky-500 top-40 md:inset-x-96 inset-x-1 w-96 z-20 py-10">
+  <div v-if="showModal" class="container md:max-w-7xl mx-auto absolute bg-rose-500 top-40 md:inset-x-96 inset-x-1 w-96 z-20 py-10">
     <h1 class="text-3xl text-center">
       Please add notes
     </h1>
