@@ -16,7 +16,7 @@
         reset,
         stop,
         timer: null,
-        totalTime: (2*60),
+        totalTime: (25*60),
         changeTime: true,
         copyMinutes: null,
         copySec: 60,
