@@ -29,6 +29,7 @@
         months: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
         showModal: true,
         activity: '',
+        localData: []
       }
     },
     methods: {
@@ -88,6 +89,7 @@
       },
       deleteSess: function() {
         this.arr = []
+        this.localData = []
         localStorage.clear('obj')
       },
       downloadObjectAsJson: function(){
@@ -119,6 +121,10 @@
         }
         return this.padTime(seconds);
       }
+    },
+    mounted() {
+      this.localData = JSON.parse(window.localStorage.obj)
+      console.log(this.localData)
     },
     updated() {
     if(this.minutes == 0) {
@@ -203,6 +209,12 @@
             <th class="border pl-2 pr-10 py-3">Started at</th>
             <th class="border pl-2 pr-10 py-3">Duration</th>
             <th class="border pl-2 pr-10 py-3">Notes</th>
+          </tr>
+          <tr class="border" v-if="this.localData.length >= 1" v-for="(tes, key) in this.localData" :key="key">
+            <td class="border pl-2 pr-10 py-5">{{ key + 1 }}</td>
+            <td class="border pl-2 pr-10 py-5">{{ tes.hours }}:{{ tes.mins < 10 ? `0${tes.mins}` : tes.mins }}:{{ tes.second }}, {{ this.months[tes.month] }} {{ tes.date }}, {{ this.days[tes.day] }}</td>
+            <td class="border pl-2 pr-10 py-5"><strong>{{ tes.minutes1 }} : {{ tes.sec }}</strong> / {{ tes.copyMinutes }} min.</td>
+            <td class="border pl-2 pr-10 py-5">{{ tes.note }}</td>
           </tr>
           <tr class="border" v-for="(tes, key) in this.arr" :key="key">
             <td class="border pl-2 pr-10 py-5">{{ key + 1 }}</td>
