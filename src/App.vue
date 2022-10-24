@@ -16,7 +16,7 @@
         reset,
         stop,
         timer: null,
-        totalTime: (25*60),
+        totalTime: (9*60),
         changeTime: true,
         copyMinutes: null,
         copySec: 60,
@@ -50,7 +50,7 @@
       startTimer: function() {
         this.timer = setInterval(() => {
           this.totalTime--
-        }, 1000)
+        }, 1)
         this.started = true
         this.date = new Date()
         if(this.changeTime === true) {
@@ -71,7 +71,7 @@
           month: this.date.getMonth(),
           date: this.date.getDate(),
           day: this.date.getDay(),
-          minutes1: (+this.copyMinutes - +this.minutes) <= 10 && this.totalTime >= 300 ? `0${(+this.copyMinutes - +this.minutes) - 1}` : `${(+this.copyMinutes - +this.minutes)}`,
+          minutes1: this.seconds !== '00' ? `${this.minutes.length > 1 ? '' : '0'}${(+this.copyMinutes - +this.minutes) - 1}` : `${(+this.copyMinutes - +this.minutes)}`,
           sec: +this.copySec - +this.seconds === 60 ? '00' : `${+this.copySec - +this.seconds < 10 ? '0' : ''}${+this.copySec - +this.seconds}`,
           note: this.activity,
           copyMinutes: this.copyMinutes
@@ -100,6 +100,9 @@
         document.body.appendChild(downloadAnchorNode); // required for firefox
         downloadAnchorNode.click();
         downloadAnchorNode.remove();
+      },
+      getMin: function(val) {
+        console.log(val)
       }
     },
     computed: {
@@ -127,10 +130,13 @@
       console.log(this.localData)
     },
     updated() {
-    if(this.totalTime === 0) {
-      this.resetTimer()
-     } 
-    }
+      console.log('total time : ', this.totalTime)
+      console.log('this minutes : ', this.minutes)
+      console.log('updated seconds : ', this.seconds)
+      if(this.totalTime === 0) {
+        this.resetTimer()
+      } 
+      }
   }
 
 </script>
